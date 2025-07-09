@@ -572,15 +572,12 @@ document.addEventListener('mousemove', e => {
 
 // === Bilder laden & anordnen ===
 const imageModules = import.meta.glob('./assets/bilder/*.png', { eager: true });
-
 const bilder = Object.entries(imageModules)
-  .map(([path, mod]) => {
-    const filename = path.split('/').pop(); // ← z. B. bild42-lea.png
-    const value = parseInt(filename.match(/bild(\d+)/)?.[1] || '0');
-    return { url: mod.default, filename, value };
-  })
+  .map(([path, mod]) => ({ url: mod.default, value: parseInt(path.match(/bild(\d+)/)?.[1] || '0') }))
   .sort((a, b) => a.value - b.value);
 
+const loader = new THREE.TextureLoader();
+const planes = [];
 
 let brightnessThreshold = 250; // initialer Wert
 let metadataHideChance = 0; // Start bei 0%
