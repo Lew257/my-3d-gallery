@@ -82,6 +82,11 @@ const createLabel = ({
   }
 
   document.body.appendChild(label);
+
+  const controller = renderer.xr.getController(1); // 0 = linker Controller
+  scene.add(controller);
+
+
   return label;
 };
 
@@ -736,6 +741,25 @@ window.addEventListener('mousemove', e => {
 });
 
 function animate() {
+
+const session = renderer.xr.getSession();
+if (session) {
+  const inputSources = session.inputSources;
+  for (const source of inputSources) {
+    if (source && source.gamepad) {
+      const axes = source.gamepad.axes;
+
+      // axes[3] = Y-Achse des linken Sticks (vor/zurück)
+      const y = axes[3]; // -1 = vorwärts, +1 = rückwärts
+
+      // Bewegungsschwelle (um Zittern zu vermeiden)
+      if (Math.abs(y) > 0.1) {
+        scrollOffset = THREE.MathUtils.clamp(scrollOffset + y * 0.8, 0, 300);
+      }
+    }
+  }
+}
+
 
 // === Test: Entfernung + Gain überprüfen ===
 if (audioObjects.length > 0) {
