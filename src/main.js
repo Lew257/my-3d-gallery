@@ -480,7 +480,6 @@ const ghostBoxes = [];
 
 function trackImageLoad() {
   imagesLoaded++;
-  console.log(imagesLoaded, totalImagesToLoad);
   if (imagesLoaded === totalImagesToLoad) {
     loadingOverlay.style.display = 'none';
     console.log("✅ Alle Bilder geladen");
@@ -738,7 +737,7 @@ window.addEventListener('mousemove', e => {
 });
 
 function animate() {
-  console.log('📸 Kamera-Z:', camera.position.z);
+  
 
 // === Test: Entfernung + Gain überprüfen ===
 if (audioObjects.length > 0) {
