@@ -782,8 +782,8 @@ const buttonTexture = new THREE.TextureLoader().load('/start_off.png');
 const buttonMaterial = new THREE.MeshBasicMaterial({ map: buttonTexture, transparent: true });
 const buttonMesh = new THREE.Mesh(buttonGeometry, buttonMaterial);
 
-buttonMesh.position.set(0, 0.5, -2);
-camera.add(buttonMesh);
+camera.add(timerSprite);
+timerSprite.position.set(0, 1.5, -2);
 scene.add(camera);
 
 // === 3. Klickerkennung (auch mit Maus/WebXR kompatibel) ===
