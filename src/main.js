@@ -751,9 +751,7 @@ if (audioObjects.length > 0) {
   testAudio.gainNode.gain.value = soundEnabled ? volume : 0;
 
   // In Konsole ausgeben
-  console.log(
-    `🎧 Entfernung: ${distance.toFixed(1)} | Volume soll: ${volume.toFixed(2)} | Gain gesetzt: ${testAudio.gainNode.gain.value.toFixed(2)}`
-  );
+  
 }
   const now = Date.now();
 
@@ -765,8 +763,7 @@ audioObjects.forEach(({ gainNode, z }) => {
   const volume = distance > maxDistance ? 0 : 1 - distance / maxDistance;
   gainNode.gain.value = soundEnabled ? volume : 0;
 
-  console.log(`🎧 Virtuelle Entfernung: ${distance.toFixed(1)} | Volume: ${volume.toFixed(2)} | Gain gesetzt: ${gainNode.gain.value.toFixed(2)}`);
-});
+ });
 
 // Beispielwert (nimm den höchsten oder durchschnittlichen Wert aller aktiven Sounds)
 const currentVolume = Math.max(...audioObjects.map(o => o.gainNode.gain.value));
