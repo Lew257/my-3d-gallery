@@ -36,7 +36,6 @@ audios.forEach(({ url, z }) => {
 
   audioObjects.push({ audio, gainNode, z }); // ← alle Infos speichern
 
-  console.log('🔊 Audio geladen bei z:', z);
 
 });
 
