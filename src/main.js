@@ -36,7 +36,6 @@ audios.forEach(({ url, z }) => {
 
   audioObjects.push({ audio, gainNode, z }); // ← alle Infos speichern
 
-
 });
 
 
@@ -82,11 +81,6 @@ const createLabel = ({
   }
 
   document.body.appendChild(label);
-
-  const controller = renderer.xr.getController(1); // 0 = linker Controller
-  scene.add(controller);
-
-
   return label;
 };
 
@@ -486,7 +480,7 @@ function trackImageLoad() {
   imagesLoaded++;
   if (imagesLoaded === totalImagesToLoad) {
     loadingOverlay.style.display = 'none';
-    console.log("Alle Bilder geladen");
+    console.log("✅ Alle Bilder geladen");
   }
 }
 
@@ -742,25 +736,6 @@ window.addEventListener('mousemove', e => {
 
 function animate() {
 
-const session = renderer.xr.getSession();
-if (session) {
-  const inputSources = session.inputSources;
-  for (const source of inputSources) {
-    if (source && source.gamepad) {
-      const axes = source.gamepad.axes;
-
-      // axes[3] = Y-Achse des linken Sticks (vor/zurück)
-      const y = axes[3]; // -1 = vorwärts, +1 = rückwärts
-
-      // Bewegungsschwelle (um Zittern zu vermeiden)
-      if (Math.abs(y) > 0.1) {
-        scrollOffset = THREE.MathUtils.clamp(scrollOffset + y * 0.8, 0, 300);
-      }
-    }
-  }
-}
-
-
 // === Test: Entfernung + Gain überprüfen ===
 if (audioObjects.length > 0) {
   const testAudio = audioObjects[0]; // Nur das erste Audio zum Testen
@@ -781,7 +756,6 @@ audioObjects.forEach(({ gainNode, z }) => {
 
   const volume = distance > maxDistance ? 0 : 1 - distance / maxDistance;
   gainNode.gain.value = soundEnabled ? volume : 0;
-
 });
 
 // Beispielwert (nimm den höchsten oder durchschnittlichen Wert aller aktiven Sounds)
