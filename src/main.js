@@ -260,11 +260,9 @@ audioObjects.forEach(({ gainNode, z }) => {
   animateReset();
 
   // Neue Bilder mit neuer Schwelle laden
-bilder.forEach(({ url, value, filename }) => {
+ bilder.forEach(({ url, value }) => {
   loadImageWithAlphaMargin(url, 30).then(({ texture, width, height }) => {
-    const originalFilename = filename; // ✅ sauber übernommen
-
-    plane.userData.filename = originalFilename;
+    const originalFilename = url.split('/').pop(); // z. B. bild42-waldspaziergang_19-10.png
     const aspect = width / height;
     const planeHeight = 1.5;
     const planeWidth = planeHeight * aspect;
@@ -626,11 +624,9 @@ const loadImageWithAlphaMargin = (url, margin = 30) => {
 
 
 
-bilder.forEach(({ url, value, filename }) => {
+bilder.forEach(({ url, value }) => {
   loadImageWithAlphaMargin(url, 30).then(({ texture, width, height }) => {
-    const originalFilename = filename; // ✅ sauber übernommen
-
-    plane.userData.filename = originalFilename;
+        const originalFilename = url.split('/').pop(); // z. B. bild42-waldspaziergang_19-10.png
 
     const aspect = width / height;
     const planeHeight = 1.5;
