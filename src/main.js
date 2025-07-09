@@ -4,7 +4,7 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 
-console.log("🚀 Tunnel mit selektivem Bloom läuft:)");
+console.log("🚀 Tunnel mit selektivem Bloom läuft");
 
 
 
@@ -256,14 +256,6 @@ audioObjects.forEach(({ gainNode, z }) => {
     if (t < 1) requestAnimationFrame(animateReset);
   };
 
-  setInterval(() => {
-  const now = Date.now();
-  const elapsed = now - startTime;
-  const min = String(Math.floor(elapsed / 60000)).padStart(2, '0');
-  const sec = String(Math.floor((elapsed % 60000) / 1000)).padStart(2, '0');
-  updateTimerText(`${min}:${sec}`);
-}, 1000);
-
   animateReset();
 
   // Neue Bilder mit neuer Schwelle laden
@@ -489,7 +481,7 @@ function trackImageLoad() {
   imagesLoaded++;
   if (imagesLoaded === totalImagesToLoad) {
     loadingOverlay.style.display = 'none';
-    console.log("✅ Alle Bilder geladen:)");
+    console.log("✅ Alle Bilder geladen");
   }
 }
 
@@ -531,36 +523,6 @@ scene.add(sky);
 const camera = new THREE.PerspectiveCamera(140, window.innerWidth / window.innerHeight, 0.1, 2000);
 camera.position.set(0, 0, 10);
 camera.layers.enable(1);
-
-// === VR-Timer-Sprite erstellen ===
-const timerCanvas = document.createElement('canvas');
-timerCanvas.width = 512;
-timerCanvas.height = 128;
-const timerCtx = timerCanvas.getContext('2d');
-
-const timerTexture = new THREE.Texture(timerCanvas);
-timerTexture.needsUpdate = true;
-
-const timerMaterial = new THREE.SpriteMaterial({ map: timerTexture });
-const timerSprite = new THREE.Sprite(timerMaterial);
-
-// Größe und Position vor der Kamera
-timerSprite.scale.set(5, 1.5, 1);
-timerSprite.position.set(0, 0, -1); // unter der Blickhöhe
-
-camera.add(timerSprite); // Timer an Kamera "kleben"
-
-
-function updateTimerText(text) {
-  timerCtx.clearRect(0, 0, timerCanvas.width, timerCanvas.height);
-  timerCtx.font = 'bold 60px sans-serif';
-  timerCtx.fillStyle = '#00ff00'; // grün
-  timerCtx.textAlign = 'center';
-  timerCtx.textBaseline = 'middle';
-  timerCtx.fillText(text, timerCanvas.width / 2, timerCanvas.height / 2);
-  timerTexture.needsUpdate = true;
-}
-
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -774,7 +736,6 @@ window.addEventListener('mousemove', e => {
 });
 
 function animate() {
-  
 
 // === Test: Entfernung + Gain überprüfen ===
 if (audioObjects.length > 0) {
@@ -786,8 +747,6 @@ if (audioObjects.length > 0) {
   // Gain aktiv setzen
   testAudio.gainNode.gain.value = soundEnabled ? volume : 0;
 
-  // In Konsole ausgeben
-  
 }
   const now = Date.now();
 
@@ -799,7 +758,7 @@ audioObjects.forEach(({ gainNode, z }) => {
   const volume = distance > maxDistance ? 0 : 1 - distance / maxDistance;
   gainNode.gain.value = soundEnabled ? volume : 0;
 
- });
+});
 
 // Beispielwert (nimm den höchsten oder durchschnittlichen Wert aller aktiven Sounds)
 const currentVolume = Math.max(...audioObjects.map(o => o.gainNode.gain.value));
@@ -812,11 +771,7 @@ volumeBar.style.width = `${Math.min(100, visualVolume * 100)}%`;
   const elapsed = now - startTime;
   const min = String(Math.floor(elapsed / 60000)).padStart(2, '0');
   const sec = String(Math.floor((elapsed % 60000) / 1000)).padStart(2, '0');
- const runtimeText = `YOUR JOURNEY ${min}:${sec}`;
-runtimeLabel.innerText = runtimeText;
-updateTimerText(runtimeText); // ← ✨ WICHTIG! schreibt Text auf das Sprite
-
-
+  runtimeLabel.innerText = `YOUR JOURNEY ${min}:${sec}`;
   runtimeLabel.style.transform = `translateX(-50%) scaleX(${Math.min(window.innerWidth / runtimeLabel.offsetWidth, 1.3 + elapsed * 0.00001)})`;
 
   const scrollValue = Math.floor((scrollOffset / 300) * 90);
