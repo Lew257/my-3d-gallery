@@ -256,6 +256,14 @@ audioObjects.forEach(({ gainNode, z }) => {
     if (t < 1) requestAnimationFrame(animateReset);
   };
 
+  setInterval(() => {
+  const now = Date.now();
+  const elapsed = now - startTime;
+  const min = String(Math.floor(elapsed / 60000)).padStart(2, '0');
+  const sec = String(Math.floor((elapsed % 60000) / 1000)).padStart(2, '0');
+  updateTimerText(`${min}:${sec}`);
+}, 1000);
+
   animateReset();
 
   // Neue Bilder mit neuer Schwelle laden
@@ -481,7 +489,7 @@ function trackImageLoad() {
   imagesLoaded++;
   if (imagesLoaded === totalImagesToLoad) {
     loadingOverlay.style.display = 'none';
-    console.log("✅ Alle Bilder geladen!!!");
+    console.log("✅ Alle Bilder geladen!!");
   }
 }
 
