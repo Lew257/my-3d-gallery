@@ -36,7 +36,7 @@ audios.forEach(({ url, z }) => {
 
   audioObjects.push({ audio, gainNode, z }); // ← alle Infos speichern
 
-
+  console.log('🔊 Audio geladen bei z:', z);
 
 });
 
@@ -737,78 +737,8 @@ window.addEventListener('mousemove', e => {
   pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
 });
 
-// === 1. Timer als 3D-Text ===
-import * as THREE from 'three';
-
-const canvas = document.createElement('canvas');
-canvas.width = 512;
-canvas.height = 256;
-const ctx = canvas.getContext('2d');
-
-const timerTexture = new THREE.Texture(canvas);
-timerTexture.needsUpdate = true;
-
-const timerMaterial = new THREE.SpriteMaterial({ map: timerTexture });
-const timerSprite = new THREE.Sprite(timerMaterial);
-timerSprite.scale.set(2, 1, 1); // Breite, Höhe
-
-// In Sichtweite setzen
-camera.add(timerSprite);
-timerSprite.position.set(0, 1.5, -2);
-
-console.log('⏱ Timer-Sprite:', timerSprite);
-console.log('📦 Kinder der Kamera:', camera.children);
-
-
-// Zeit-Update-Logik (z. B. jede Sekunde)
-function updateTimerText(text) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.font = 'bold 80px sans-serif';
-  ctx.fillStyle = '#00ff00';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(text, canvas.width / 2, canvas.height / 2);
-  timerTexture.needsUpdate = true;
-}
-
-setInterval(() => {
-  const elapsed = Math.floor((Date.now() - startTime) / 1000);
-  const min = String(Math.floor(elapsed / 60)).padStart(2, '0');
-  const sec = String(elapsed % 60).padStart(2, '0');
-  updateTimerText(`${min}:${sec}`);
-}, 1000);
-
-
-// === 2. Start-Button als 3D-Fläche ===
-const buttonGeometry = new THREE.PlaneGeometry(1.5, 0.6);
-const buttonTexture = new THREE.TextureLoader().load('/start_off.png');
-const buttonMaterial = new THREE.MeshBasicMaterial({ map: buttonTexture, transparent: true });
-const buttonMesh = new THREE.Mesh(buttonGeometry, buttonMaterial);
-
-camera.add(timerSprite);
-timerSprite.position.set(0, 1.5, -2);
-scene.add(camera);
-
-// === 3. Klickerkennung (auch mit Maus/WebXR kompatibel) ===
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-
-window.addEventListener('click', (event) => {
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-  raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects([buttonMesh]);
-
-  if (intersects.length > 0) {
-    console.log('🎬 Start Button geklickt');
-    startNewJourney();
-  }
-});
-
-
 function animate() {
-  
+  console.log('📸 Kamera-Z:', camera.position.z);
 
 // === Test: Entfernung + Gain überprüfen ===
 if (audioObjects.length > 0) {
@@ -820,6 +750,10 @@ if (audioObjects.length > 0) {
   // Gain aktiv setzen
   testAudio.gainNode.gain.value = soundEnabled ? volume : 0;
 
+  // In Konsole ausgeben
+  console.log(
+    `🎧 Entfernung: ${distance.toFixed(1)} | Volume soll: ${volume.toFixed(2)} | Gain gesetzt: ${testAudio.gainNode.gain.value.toFixed(2)}`
+  );
 }
   const now = Date.now();
 
@@ -831,6 +765,7 @@ audioObjects.forEach(({ gainNode, z }) => {
   const volume = distance > maxDistance ? 0 : 1 - distance / maxDistance;
   gainNode.gain.value = soundEnabled ? volume : 0;
 
+  console.log(`🎧 Virtuelle Entfernung: ${distance.toFixed(1)} | Volume: ${volume.toFixed(2)} | Gain gesetzt: ${gainNode.gain.value.toFixed(2)}`);
 });
 
 // Beispielwert (nimm den höchsten oder durchschnittlichen Wert aller aktiven Sounds)
@@ -934,6 +869,7 @@ ghostBoxes.push(ghostDot);
 }
 
 animate();
+
 
 
 
