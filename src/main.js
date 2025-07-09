@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
+
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
@@ -865,7 +865,7 @@ ghostBoxes.push(ghostDot);
   });
 
   glowActive ? bloomComposer.render() : renderer.render(scene, camera);
-  renderer.setAnimationLoop(animate);
+  requestAnimationFrame(animate);
 }
 
 animate();
