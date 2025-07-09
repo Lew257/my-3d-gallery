@@ -755,7 +755,6 @@ timerSprite.scale.set(2, 1, 1); // Breite, Höhe
 // In Sichtweite setzen
 camera.add(timerSprite);
 timerSprite.position.set(0, 1.5, -2);
-scene.add(camera);
 
 // Zeit-Update-Logik (z. B. jede Sekunde)
 function updateTimerText(text) {
