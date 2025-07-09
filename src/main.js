@@ -489,7 +489,7 @@ function trackImageLoad() {
   imagesLoaded++;
   if (imagesLoaded === totalImagesToLoad) {
     loadingOverlay.style.display = 'none';
-    console.log("✅ Alle Bilder geladen!!");
+    console.log("✅ Alle Bilder geladen:)");
   }
 }
 
@@ -812,7 +812,10 @@ volumeBar.style.width = `${Math.min(100, visualVolume * 100)}%`;
   const elapsed = now - startTime;
   const min = String(Math.floor(elapsed / 60000)).padStart(2, '0');
   const sec = String(Math.floor((elapsed % 60000) / 1000)).padStart(2, '0');
-  runtimeLabel.innerText = `YOUR JOURNEY ${min}:${sec}`;
+  const runtimeText = `YOUR JOURNEY ${min}:${sec}`;
+runtimeLabel.innerText = runtimeText;
+updateTimerText(runtimeText); // ← NEU: Sprite-Text auch updaten!
+
   runtimeLabel.style.transform = `translateX(-50%) scaleX(${Math.min(window.innerWidth / runtimeLabel.offsetWidth, 1.3 + elapsed * 0.00001)})`;
 
   const scrollValue = Math.floor((scrollOffset / 300) * 90);
