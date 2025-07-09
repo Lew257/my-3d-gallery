@@ -751,6 +751,7 @@ timerTexture.needsUpdate = true;
 const timerMaterial = new THREE.SpriteMaterial({ map: timerTexture });
 const timerSprite = new THREE.Sprite(timerMaterial);
 timerSprite.scale.set(2, 1, 1); // Breite, Höhe
+timerSprite.position.set(0, 1.5, -2); // direkt vor der Kamera
 
 // In Sichtweite setzen
 camera.add(timerSprite);
