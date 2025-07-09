@@ -545,8 +545,8 @@ const timerMaterial = new THREE.SpriteMaterial({ map: timerTexture });
 const timerSprite = new THREE.Sprite(timerMaterial);
 
 // Größe und Position vor der Kamera
-timerSprite.scale.set(3, 0.75, 1);
-timerSprite.position.set(0, -1.5, -2); // unter der Blickhöhe
+timerSprite.scale.set(5, 1.5, 1);
+timerSprite.position.set(0, 0, -1); // unter der Blickhöhe
 
 camera.add(timerSprite); // Timer an Kamera "kleben"
 
@@ -812,9 +812,10 @@ volumeBar.style.width = `${Math.min(100, visualVolume * 100)}%`;
   const elapsed = now - startTime;
   const min = String(Math.floor(elapsed / 60000)).padStart(2, '0');
   const sec = String(Math.floor((elapsed % 60000) / 1000)).padStart(2, '0');
-  const runtimeText = `YOUR JOURNEY ${min}:${sec}`;
+ const runtimeText = `YOUR JOURNEY ${min}:${sec}`;
 runtimeLabel.innerText = runtimeText;
-updateTimerText(runtimeText); // ← NEU: Sprite-Text auch updaten!
+updateTimerText(runtimeText); // ← ✨ WICHTIG! schreibt Text auf das Sprite
+
 
   runtimeLabel.style.transform = `translateX(-50%) scaleX(${Math.min(window.innerWidth / runtimeLabel.offsetWidth, 1.3 + elapsed * 0.00001)})`;
 
