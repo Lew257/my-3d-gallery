@@ -1,9 +1,11 @@
 import * as THREE from 'three';
+import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 
 console.log("🚀 Tunnel mit selektivem Bloom läuft");
+
 
 
 const baseRadius = 2;
@@ -258,9 +260,11 @@ audioObjects.forEach(({ gainNode, z }) => {
   animateReset();
 
   // Neue Bilder mit neuer Schwelle laden
- bilder.forEach(({ url, value }) => {
+bilder.forEach(({ url, value, filename }) => {
   loadImageWithAlphaMargin(url, 30).then(({ texture, width, height }) => {
-    const originalFilename = url.split('/').pop(); // z. B. bild42-waldspaziergang_19-10.png
+    const originalFilename = filename; // ✅ sauber übernommen
+
+    plane.userData.filename = originalFilename;
     const aspect = width / height;
     const planeHeight = 1.5;
     const planeWidth = planeHeight * aspect;
@@ -526,12 +530,15 @@ camera.layers.enable(1);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.xr.enabled = true;
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setClearColor(0x000000, 0);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.0;
 document.body.appendChild(renderer.domElement);
+
+document.body.appendChild(VRButton.createButton(renderer));
 
 // === Postprocessing (Bloom) ===
 const renderTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
@@ -567,12 +574,15 @@ document.addEventListener('mousemove', e => {
 
 // === Bilder laden & anordnen ===
 const imageModules = import.meta.glob('./assets/bilder/*.png', { eager: true });
+
 const bilder = Object.entries(imageModules)
-  .map(([path, mod]) => ({ url: mod.default, value: parseInt(path.match(/bild(\d+)/)?.[1] || '0') }))
+  .map(([path, mod]) => {
+    const filename = path.split('/').pop(); // ← z. B. bild42-lea.png
+    const value = parseInt(filename.match(/bild(\d+)/)?.[1] || '0');
+    return { url: mod.default, filename, value };
+  })
   .sort((a, b) => a.value - b.value);
 
-const loader = new THREE.TextureLoader();
-const planes = [];
 
 let brightnessThreshold = 250; // initialer Wert
 let metadataHideChance = 0; // Start bei 0%
@@ -616,9 +626,11 @@ const loadImageWithAlphaMargin = (url, margin = 30) => {
 
 
 
-bilder.forEach(({ url, value }) => {
+bilder.forEach(({ url, value, filename }) => {
   loadImageWithAlphaMargin(url, 30).then(({ texture, width, height }) => {
-        const originalFilename = url.split('/').pop(); // z. B. bild42-waldspaziergang_19-10.png
+    const originalFilename = filename; // ✅ sauber übernommen
+
+    plane.userData.filename = originalFilename;
 
     const aspect = width / height;
     const planeHeight = 1.5;
@@ -860,7 +872,7 @@ ghostBoxes.push(ghostDot);
   });
 
   glowActive ? bloomComposer.render() : renderer.render(scene, camera);
-  requestAnimationFrame(animate);
+  renderer.setAnimationLoop(animate);
 }
 
 animate();
