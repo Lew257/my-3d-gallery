@@ -535,6 +535,10 @@ document.body.appendChild(renderer.domElement);
 
 document.body.appendChild(VRButton.createButton(renderer));
 
+const controller = renderer.xr.getController(1); // rechter Controller
+scene.add(controller);
+
+
 // === Postprocessing (Bloom) ===
 const renderTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
   type: THREE.HalfFloatType,
@@ -748,6 +752,22 @@ if (audioObjects.length > 0) {
 
 }
   const now = Date.now();
+
+  const session = renderer.xr.getSession();
+if (session) {
+  const inputSources = session.inputSources;
+  for (const source of inputSources) {
+    if (source.handedness === 'right' && source.gamepad) {
+      const axes = source.gamepad.axes;
+      const y = axes[3]; // Joystick Y-Achse: -1 = vor, +1 = zurück
+
+      if (Math.abs(y) > 0.1) {
+        scrollOffset = THREE.MathUtils.clamp(scrollOffset + y * 0.8, 0, 300);
+      }
+    }
+  }
+}
+
 
 audioObjects.forEach(({ gainNode, z }) => {
   const virtualCameraZ = scrollOffset + 10; // Kamera steht fix bei Z=10
