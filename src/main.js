@@ -481,7 +481,7 @@ function trackImageLoad() {
   imagesLoaded++;
   if (imagesLoaded === totalImagesToLoad) {
     loadingOverlay.style.display = 'none';
-    console.log("✅ Alle Bilder geladen");
+    console.log("✅ Alle Bilder geladen!!!");
   }
 }
 
