@@ -865,7 +865,7 @@ ghostBoxes.push(ghostDot);
   });
 
   glowActive ? bloomComposer.render() : renderer.render(scene, camera);
-  requestAnimationFrame(animate);
+  renderer.setAnimationLoop(animate);
 }
 
 animate();
