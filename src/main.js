@@ -524,6 +524,36 @@ const camera = new THREE.PerspectiveCamera(140, window.innerWidth / window.inner
 camera.position.set(0, 0, 10);
 camera.layers.enable(1);
 
+// === VR-Timer-Sprite erstellen ===
+const timerCanvas = document.createElement('canvas');
+timerCanvas.width = 512;
+timerCanvas.height = 128;
+const timerCtx = timerCanvas.getContext('2d');
+
+const timerTexture = new THREE.Texture(timerCanvas);
+timerTexture.needsUpdate = true;
+
+const timerMaterial = new THREE.SpriteMaterial({ map: timerTexture });
+const timerSprite = new THREE.Sprite(timerMaterial);
+
+// Größe und Position vor der Kamera
+timerSprite.scale.set(3, 0.75, 1);
+timerSprite.position.set(0, -1.5, -2); // unter der Blickhöhe
+
+camera.add(timerSprite); // Timer an Kamera "kleben"
+
+
+function updateTimerText(text) {
+  timerCtx.clearRect(0, 0, timerCanvas.width, timerCanvas.height);
+  timerCtx.font = 'bold 60px sans-serif';
+  timerCtx.fillStyle = '#00ff00'; // grün
+  timerCtx.textAlign = 'center';
+  timerCtx.textBaseline = 'middle';
+  timerCtx.fillText(text, timerCanvas.width / 2, timerCanvas.height / 2);
+  timerTexture.needsUpdate = true;
+}
+
+
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.xr.enabled = true;
