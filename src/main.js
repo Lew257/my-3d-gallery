@@ -816,19 +816,24 @@ let filename = hovered.userData?.filename || '';
 // Nur den Teil vor ".png" nehmen (ignoriert Vercel-Hash)
 filename = filename.split('.png')[0];
 
-// 💡 Jetzt z. B. "bild1-PotsdamHbf_14-22" oder mit Vercel-Suffix
-
-const matchFull = filename.match(/bild\d+[-_](.+?)_(\d{2})[-_](\d{2})/);
-const matchShort = filename.match(/bild\d+[-_](.+)/);
+// 💡 z. B. "bild1-PotsdamHbf_14-22" oder mit Vercel-Suffix
 
 let description = '';
 let time = '';
 
-if (matchFull) {
-  description = matchFull[1].replace(/[-_]/g, ' ');
-  time = `${matchFull[2]}:${matchFull[3]}`;
-} else if (matchShort) {
-  description = matchShort[1].replace(/[-_]/g, ' ');
+try {
+  const matchFull = filename.match(/bild\d+[-_](.+?)_(\d{2})[-_](\d{2})/);
+  const matchShort = filename.match(/bild\d+[-_](.+)/);
+
+  if (matchFull) {
+    description = matchFull[1].replace(/[-_]/g, ' ');
+    time = `${matchFull[2]}:${matchFull[3]}`;
+  } else if (matchShort) {
+    description = matchShort[1].replace(/[-_]/g, ' ');
+    time = '';
+  }
+} catch (e) {
+  console.warn("❌ Fehler beim Parsen des Dateinamens:", filename, e);
 }
 
 if (!hideMeta && (description || time)) {
