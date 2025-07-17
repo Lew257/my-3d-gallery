@@ -811,19 +811,16 @@ const intersects = raycaster.intersectObjects(planes.map(p => p.mesh));
 if (intersects.length > 0 && document.pointerLockElement !== document.body) {
   const hovered = intersects[0].object;
 
-let filename = hovered.userData?.filename || '';
-
-// Nur den Teil vor ".png" nehmen (ignoriert Vercel-Hash)
-filename = filename.split('.png')[0];
-
-// 💡 z. B. "bild1-PotsdamHbf_14-22" oder mit Vercel-Suffix
+const filename = hovered.userData?.filename || '';
+const hideMeta = hovered.userData?.hideMetadata;
 
 let description = '';
 let time = '';
 
-try {
-  const matchFull = filename.match(/bild\d+[-_](.+?)_(\d{2})[-_](\d{2})/);
-  const matchShort = filename.match(/bild\d+[-_](.+)/);
+if (!hideMeta) {
+  // Neuer Versuch: Beschreibung + Uhrzeit (z. B. Lewin_15_22)
+  const matchFull = filename.match(/bild\d+[_-](.+?)_(\d{2})_(\d{2})/);
+  const matchShort = filename.match(/bild\d+[_-](.+?)\.png/);
 
   if (matchFull) {
     description = matchFull[1].replace(/[-_]/g, ' ');
@@ -832,18 +829,13 @@ try {
     description = matchShort[1].replace(/[-_]/g, ' ');
     time = '';
   }
-} catch (e) {
-  console.warn("❌ Fehler beim Parsen des Dateinamens:", filename, e);
 }
-
 if (!hideMeta && (description || time)) {
   if (filename !== lastChatFilename) {
     addChatMessage(`${description}${time ? ` ${time}` : ''}`);
     lastChatFilename = filename;
   }
 }
-
-
 
 
 
