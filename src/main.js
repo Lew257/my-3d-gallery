@@ -811,26 +811,24 @@ const intersects = raycaster.intersectObjects(planes.map(p => p.mesh));
 if (intersects.length > 0 && document.pointerLockElement !== document.body) {
   const hovered = intersects[0].object;
 
-const filename = hovered.userData?.filename || '';
-const hideMeta = hovered.userData?.hideMetadata;
+let filename = hovered.userData?.filename || '';
+
+// Nur den Teil vor ".png" nehmen (ignoriert Vercel-Hash)
+filename = filename.split('.png')[0];
+
+// 💡 Jetzt z. B. "bild1-PotsdamHbf_14-22" oder mit Vercel-Suffix
+
+const matchFull = filename.match(/bild\d+[-_](.+?)_(\d{2})[-_](\d{2})/);
+const matchShort = filename.match(/bild\d+[-_](.+)/);
 
 let description = '';
 let time = '';
 
-if (!hideMeta) {
-  // Filename bereinigen: nur der Name ohne Hash-Endung
-  const cleanFilename = filename.replace(/\.png.*$/, '.png');
-
-  const matchFull = cleanFilename.match(/bild\d+[_-](.+?)_(\d{2})_(\d{2})/);
-  const matchShort = cleanFilename.match(/bild\d+[_-](.+?)\.png/);
-
-  if (matchFull) {
-    description = matchFull[1].replace(/[-_]/g, ' ');
-    time = `${matchFull[2]}:${matchFull[3]}`;
-  } else if (matchShort) {
-    description = matchShort[1].replace(/[-_]/g, ' ');
-    time = '';
-  }
+if (matchFull) {
+  description = matchFull[1].replace(/[-_]/g, ' ');
+  time = `${matchFull[2]}:${matchFull[3]}`;
+} else if (matchShort) {
+  description = matchShort[1].replace(/[-_]/g, ' ');
 }
 
 if (!hideMeta && (description || time)) {
@@ -839,6 +837,7 @@ if (!hideMeta && (description || time)) {
     lastChatFilename = filename;
   }
 }
+
 
 
 
