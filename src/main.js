@@ -812,7 +812,12 @@ if (intersects.length > 0 && document.pointerLockElement !== document.body) {
   const hovered = intersects[0].object;
 
 const filename = hovered.userData?.filename || '';
+
+console.log('🖼️ Dateiname beim Hover:', filename);
+
 const hideMeta = hovered.userData?.hideMetadata;
+
+
 
 let description = '';
 let time = '';
