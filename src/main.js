@@ -818,9 +818,11 @@ let description = '';
 let time = '';
 
 if (!hideMeta) {
-  // Neuer Versuch: Beschreibung + Uhrzeit (z. B. Lewin_15_22)
-  const matchFull = filename.match(/bild\d+[_-](.+?)_(\d{2})_(\d{2})/);
-  const matchShort = filename.match(/bild\d+[_-](.+?)\.png/);
+  // Filename bereinigen: nur der Name ohne Hash-Endung
+  const cleanFilename = filename.replace(/\.png.*$/, '.png');
+
+  const matchFull = cleanFilename.match(/bild\d+[_-](.+?)_(\d{2})_(\d{2})/);
+  const matchShort = cleanFilename.match(/bild\d+[_-](.+?)\.png/);
 
   if (matchFull) {
     description = matchFull[1].replace(/[-_]/g, ' ');
@@ -830,12 +832,14 @@ if (!hideMeta) {
     time = '';
   }
 }
+
 if (!hideMeta && (description || time)) {
   if (filename !== lastChatFilename) {
     addChatMessage(`${description}${time ? ` ${time}` : ''}`);
     lastChatFilename = filename;
   }
 }
+
 
 
 
