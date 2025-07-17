@@ -823,18 +823,17 @@ let description = '';
 let time = '';
 
 if (!hideMeta) {
-  // Neuer Versuch: Beschreibung + Uhrzeit (z. B. Lewin_15_22)
-  const matchFull = filename.match(/bild\d+[_-](.+?)_(\d{2})_(\d{2})/);
-  const matchShort = filename.match(/bild\d+[_-](.+?)\.png/);
+  const match = filename.match(/bild\d+-(.*?)(?:[_-](\d{2})[-_](\d{2}))/);
 
-  if (matchFull) {
-    description = matchFull[1].replace(/[-_]/g, ' ');
-    time = `${matchFull[2]}:${matchFull[3]}`;
-  } else if (matchShort) {
-    description = matchShort[1].replace(/[-_]/g, ' ');
+  if (match) {
+    description = match[1].replace(/[-_]/g, ' ');
+    time = `${match[2]}:${match[3]}`;
+  } else {
+    description = filename.replace(/^bild\d+-/, '').replace(/[-_]/g, ' ');
     time = '';
   }
 }
+
 if (!hideMeta && (description || time)) {
   if (filename !== lastChatFilename) {
     addChatMessage(`${description}${time ? ` ${time}` : ''}`);
