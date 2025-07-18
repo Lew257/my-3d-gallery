@@ -573,7 +573,7 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.0;
 document.body.appendChild(renderer.domElement);
 
-document.body.appendChild(VRButton.createButton(renderer));
+//document.body.appendChild(VRButton.createButton(renderer));
 
 const controller = renderer.xr.getController(1); // rechter Controller
 scene.add(controller);
