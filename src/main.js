@@ -780,19 +780,24 @@ window.addEventListener('mousemove', e => {
 
 function animate() {
 
-if (/Mobi|Android/i.test(navigator.userAgent) && orientationOffsetSet) {
-  const adjustedAlpha = alpha - initialAlpha;
-  const adjustedBeta = beta - initialBeta;
-  const adjustedGamma = gamma - initialGamma;
-
+if (/Mobi|Android/i.test(navigator.userAgent)) {
   const euler = new THREE.Euler(
-    THREE.MathUtils.degToRad(adjustedBeta),
-    THREE.MathUtils.degToRad(adjustedAlpha),
-    -THREE.MathUtils.degToRad(adjustedGamma),
+    THREE.MathUtils.degToRad(beta),
+    THREE.MathUtils.degToRad(alpha),
+    -THREE.MathUtils.degToRad(gamma),
     'YXZ'
   );
+
+  // 📐 Extra-Rotation, um die Kamera gerade auszurichten
+  const correction = new THREE.Quaternion().setFromAxisAngle(
+    new THREE.Vector3(1, 0, 0), // X-Achse
+    -Math.PI / 2                // 90 Grad nach oben
+  );
+
   camera.quaternion.setFromEuler(euler);
+  camera.quaternion.multiply(correction); // ➕ Kombination mit Korrektur
 }
+
 
 
 
