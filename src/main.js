@@ -6,6 +6,15 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 
 console.log("🚀 Tunnel mit selektivem Bloom läuft");
 
+// 🎯 Bewegungssensor-Werte (global)
+let alpha = 0, beta = 0, gamma = 0;
+
+// 📡 Sensor-Daten verarbeiten
+function handleOrientation(event) {
+  alpha = event.alpha;
+  beta = event.beta;
+  gamma = event.gamma;
+}
 
 
 const baseRadius = 2;
@@ -346,6 +355,23 @@ audioObjects.forEach(({ gainNode, z }) => {
 
 // Beim Klick wechseln & reset auslösen
 startContainer.onclick = () => {
+  // 🌍 Bewegungssensor-Zugriff (nur iOS benötigt das)
+if (
+  typeof DeviceOrientationEvent !== 'undefined' &&
+  typeof DeviceOrientationEvent.requestPermission === 'function'
+) {
+  DeviceOrientationEvent.requestPermission()
+    .then(permissionState => {
+      if (permissionState === 'granted') {
+        window.addEventListener('deviceorientation', handleOrientation, true);
+      }
+    })
+    .catch(console.error);
+} else {
+  // Für Android oder ältere iOS-Geräte
+  window.addEventListener('deviceorientation', handleOrientation, true);
+}
+
   startOn.style.display = 'block';
   startOff.style.display = 'none';
 
@@ -739,6 +765,18 @@ window.addEventListener('mousemove', e => {
 });
 
 function animate() {
+
+  // 📷 Kamera dreht sich je nach Handybewegung (nur auf Mobilgeräten sinnvoll)
+if (/Mobi|Android/i.test(navigator.userAgent)) {
+  const euler = new THREE.Euler(
+    THREE.MathUtils.degToRad(beta),   // Neigung vor/zurück
+    THREE.MathUtils.degToRad(alpha),  // Kompassrichtung
+    -THREE.MathUtils.degToRad(gamma), // Neigung seitlich
+    'YXZ' // Rotationsreihenfolge
+  );
+  camera.quaternion.setFromEuler(euler);
+}
+
 
 // === Test: Entfernung + Gain überprüfen ===
 if (audioObjects.length > 0) {
