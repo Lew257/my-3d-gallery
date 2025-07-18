@@ -177,7 +177,7 @@ const countdownLabel = createLabel({
 
 const runtimeLabel = createLabel({
   bottom: 0,
-  fontSize: window.innerWidth < 600 ? 12 : 50, // 📱 4x kleiner auf kleinen Screens
+  fontSize: window.innerWidth < 600 ? 25 : 50, // 📱 4x kleiner auf kleinen Screens
   textalign: 'center',
   fontWeight: 'extrabold',
   strokeColor: '#ffffff',
