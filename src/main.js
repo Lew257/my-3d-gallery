@@ -184,6 +184,8 @@ const runtimeLabel = createLabel({
   color: '#000000',
   shadow: true
 });
+label.style.lineHeight = window.innerWidth < 600 ? '1.1' : '1.4';
+
 
 // === Start Button mit Bildumschaltung ===
 const startContainer = document.createElement('div');
