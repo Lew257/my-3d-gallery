@@ -9,6 +9,12 @@ console.log("🚀 Tunnel mit selektivem Bloom läuft");
 // 🎯 Bewegungssensor-Werte (global)
 let alpha = 0, beta = 0, gamma = 0;
 
+let initialAlpha = 0;
+let initialBeta = 0;
+let initialGamma = 0;
+let orientationOffsetSet = false;
+
+
 // 📡 Sensor-Daten verarbeiten
 function handleOrientation(event) {
   alpha = event.alpha;
@@ -373,6 +379,14 @@ if (
 }
 
   startOn.style.display = 'block';
+
+  if (!orientationOffsetSet) {
+  initialAlpha = alpha;
+  initialBeta = beta;
+  initialGamma = gamma;
+  orientationOffsetSet = true;
+}
+
   startOff.style.display = 'none';
 
   // Nach 500ms wieder zurück auf OFF
@@ -766,16 +780,20 @@ window.addEventListener('mousemove', e => {
 
 function animate() {
 
-  // 📷 Kamera dreht sich je nach Handybewegung (nur auf Mobilgeräten sinnvoll)
-if (/Mobi|Android/i.test(navigator.userAgent)) {
+if (/Mobi|Android/i.test(navigator.userAgent) && orientationOffsetSet) {
+  const adjustedAlpha = alpha - initialAlpha;
+  const adjustedBeta = beta - initialBeta;
+  const adjustedGamma = gamma - initialGamma;
+
   const euler = new THREE.Euler(
-    THREE.MathUtils.degToRad(beta),   // Neigung vor/zurück
-    THREE.MathUtils.degToRad(alpha),  // Kompassrichtung
-    -THREE.MathUtils.degToRad(gamma), // Neigung seitlich
-    'YXZ' // Rotationsreihenfolge
+    THREE.MathUtils.degToRad(adjustedBeta),
+    THREE.MathUtils.degToRad(adjustedAlpha),
+    -THREE.MathUtils.degToRad(adjustedGamma),
+    'YXZ'
   );
   camera.quaternion.setFromEuler(euler);
 }
+
 
 
 // === Test: Entfernung + Gain überprüfen ===
