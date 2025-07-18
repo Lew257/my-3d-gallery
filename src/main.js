@@ -759,9 +759,24 @@ bilder.forEach(({ url, value }) => {
 
 // === Scrollsteuerung ===
 let scrollOffset = 0;
+let touchStartY = 0;
+let lastTouchY = 0;
+
 window.addEventListener('wheel', e => {
   scrollOffset = THREE.MathUtils.clamp(scrollOffset - e.deltaY * 0.05, 0, 300);
 });
+
+// 📱 Touch-Steuerung für Mobile
+window.addEventListener('touchstart', (e) => {
+  touchStartY = e.touches[0].clientY;
+  lastTouchY = scrollOffset;
+}, { passive: true });
+
+window.addEventListener('touchmove', (e) => {
+  const deltaY = e.touches[0].clientY - touchStartY;
+  scrollOffset = THREE.MathUtils.clamp(lastTouchY - deltaY * 0.2, 0, 300); // Stärke der Bewegung
+}, { passive: true });
+
 
 window.addEventListener('resize', () => {
   const w = window.innerWidth, h = window.innerHeight;
