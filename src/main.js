@@ -66,7 +66,9 @@ const createLabel = ({
   shadow = true // ✨ NEU: Schatten standardmäßig aktiv
 }) => {
   const label = document.createElement('div');
-  label.style.position = 'absolute';
+  label.style.position = 'absolute';  
+  label.style.lineHeight = '0.8'; // oder 1.0, 1.2 je nach gewünschtem Abstand
+
 
   if (top !== null) label.style.top = `${top}px`;
   if (bottom !== null) label.style.bottom = `${bottom}px`;
